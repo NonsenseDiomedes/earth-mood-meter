@@ -1,0 +1,645 @@
+/* ============================================================
+   style.css — Earth Mood Meter
+   ------------------------------------------------------------
+   Design language: "night side of Earth" — a deep space navy
+   backdrop with soft aurora-toned glows (teal + violet), like
+   city lights and atmosphere seen from orbit. Each mood carries
+   its own accent color, so the page itself feels emotionally
+   alive rather than uniformly neon.
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Surfaces */
+  --bg: #090c14;
+  --bg-glow-a: #0d3b3a;
+  --bg-glow-b: #221a4a;
+  --surface: #121826;
+  --surface-2: #1a2236;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --text: #eaeef7;
+  --text-dim: #93a0b8;
+  --text-faint: #5b6580;
+
+  /* Brand accents */
+  --teal: #4fd8c4;
+  --violet: #9088f0;
+
+  /* Per-mood accents */
+  --mood-amber: #f2a65a;
+  --mood-teal: #4fd8c4;
+  --mood-violet: #a495f2;
+  --mood-slate: #9aa5bd;
+  --mood-blue: #6fa3e0;
+  --mood-coral: #e8748a;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  /* Layout */
+  --max-width: 1080px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+
+/* ---------- Reset & base ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Ambient background glow — fixed so it stays put while scrolling */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 900px 600px at 15% -10%, rgba(79, 216, 196, 0.14), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 90% 10%, rgba(144, 136, 240, 0.12), transparent 60%),
+    radial-gradient(ellipse 1000px 800px at 50% 120%, rgba(79, 216, 196, 0.08), transparent 60%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: inherit;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible keyboard focus for accessibility */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ---------- Shared section styling ---------- */
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.section-subtitle {
+  color: var(--text-dim);
+  font-size: 1rem;
+  margin-top: 8px;
+  max-width: 560px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(9, 12, 20, 0.65);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.logo-emoji {
+  font-size: 1.3rem;
+}
+
+.main-nav {
+  display: flex;
+  gap: 24px;
+}
+
+.nav-link {
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text);
+}
+
+/* ============================================================
+   HERO / VOTING
+   ============================================================ */
+.hero {
+  padding: 72px 0 48px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The glowing, breathing orb behind the Earth emoji — this is
+   the page's signature element: a slow "pulse" that echoes the
+   idea of a living planet with a heartbeat. */
+.earth-orb {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.earth-orb::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 216, 196, 0.35), rgba(144, 136, 240, 0.18) 60%, transparent 75%);
+  filter: blur(6px);
+  animation: breathe 4.5s ease-in-out infinite;
+}
+
+.earth-emoji {
+  font-size: 4.2rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 24px rgba(79, 216, 196, 0.35));
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  max-width: 640px;
+}
+
+.hero-subtitle {
+  color: var(--text-dim);
+  margin-top: 12px;
+  font-size: 1.05rem;
+  max-width: 480px;
+}
+
+/* Mood button grid */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 40px;
+  width: 100%;
+  max-width: 720px;
+}
+
+.mood-btn {
+  --glow: var(--mood-teal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.mood-btn[data-glow="amber"] { --glow: var(--mood-amber); }
+.mood-btn[data-glow="teal"] { --glow: var(--mood-teal); }
+.mood-btn[data-glow="violet"] { --glow: var(--mood-violet); }
+.mood-btn[data-glow="slate"] { --glow: var(--mood-slate); }
+.mood-btn[data-glow="blue"] { --glow: var(--mood-blue); }
+.mood-btn[data-glow="coral"] { --glow: var(--mood-coral); }
+
+.mood-btn:hover:not(:disabled) {
+  transform: translateY(-4px);
+  border-color: var(--glow);
+  box-shadow: 0 8px 28px -8px var(--glow);
+  background: var(--surface-2);
+}
+
+.mood-btn:active:not(:disabled) {
+  transform: translateY(-1px) scale(0.97);
+}
+
+.mood-btn.selected {
+  border-color: var(--glow);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 1px var(--glow), 0 8px 28px -8px var(--glow);
+}
+
+.mood-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.mood-emoji {
+  font-size: 1.8rem;
+}
+
+.mood-label {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.vote-confirmation {
+  margin-top: 24px;
+  min-height: 1.2em;
+  font-size: 0.98rem;
+  color: var(--teal);
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.vote-confirmation.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   AD SLOTS
+   ============================================================ */
+.ad-slot {
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.ad-placeholder {
+  width: 100%;
+  max-width: 728px;
+  min-height: 90px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   PULSE / LIVE STATISTICS
+   ============================================================ */
+.pulse-section {
+  padding: 32px 0 56px;
+}
+
+.pulse-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.pulse-count {
+  margin-top: 10px;
+  color: var(--text-dim);
+  font-size: 0.98rem;
+}
+
+.pulse-number {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.pulse-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pulse-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 64px;
+  align-items: center;
+  gap: 14px;
+}
+
+.pulse-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.pulse-label-emoji {
+  font-size: 1.1rem;
+}
+
+/* The bar track looks like an atmospheric readout: a thin,
+   glassy channel with a glowing gradient fill that animates
+   in on load and whenever Firestore reports new numbers. */
+.pulse-track {
+  position: relative;
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.pulse-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--fill-color, var(--teal)), color-mix(in srgb, var(--fill-color, var(--teal)) 60%, white));
+  box-shadow: 0 0 12px var(--fill-color, var(--teal));
+  transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pulse-percent {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+/* ============================================================
+   COMMUNITY FEELINGS
+   ============================================================ */
+.community-section {
+  padding: 24px 0 56px;
+}
+
+.community-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.community-header .section-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.community-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.composer-card,
+.feed-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.message-input {
+  width: 100%;
+  min-height: 140px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.message-input::placeholder {
+  color: var(--text-faint);
+}
+
+.message-input:focus {
+  border-color: var(--teal);
+  outline: none;
+}
+
+.composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.char-count {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.send-btn {
+  background: linear-gradient(135deg, var(--teal), var(--violet));
+  color: #08111a;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 11px 22px;
+  border-radius: 999px;
+  transition: transform 0.18s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.send-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px var(--teal);
+}
+
+.send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.message-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.message-feed::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-feed::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+.feed-empty {
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.message-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  animation: fadeSlideIn 0.4s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.message-anon {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--violet);
+}
+
+.message-time {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+.message-text {
+  font-size: 0.93rem;
+  color: var(--text);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 24px 48px;
+  text-align: center;
+}
+
+.footer-line {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.footer-dim {
+  color: var(--text-faint);
+}
+
+.footer-copyright {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-faint);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+  .community-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .mood-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pulse-row {
+    grid-template-columns: 84px 1fr 48px;
+    gap: 10px;
+  }
+
+  .header-inner {
+    padding: 14px 20px;
+  }
+
+  .hero {
+    padding: 48px 0 36px;
+  }
+}
+
+@media (max-width: 420px) {
+  .mood-label {
+    font-size: 0.74rem;
+  }
+}
