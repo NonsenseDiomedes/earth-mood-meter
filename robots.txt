@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://earth-mood-meter.vercel.app/sitemap.xml
